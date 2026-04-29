@@ -12,4 +12,3 @@ data class Post(
     val imageUri: String,
     val timestamp: String
 )
-

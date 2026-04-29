@@ -32,8 +32,11 @@ class CreatePostActivity : AppCompatActivity() {
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
 
         binding.btnImage.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             intent.type = "image/*"
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
             startActivityForResult(intent, imagePickerCode)
         }
 
@@ -47,7 +50,15 @@ class CreatePostActivity : AppCompatActivity() {
 
         if (requestCode == imagePickerCode && resultCode == Activity.RESULT_OK) {
             selectedImageUri = data?.data
-            binding.imagePreview.setImageURI(selectedImageUri)
+
+            selectedImageUri?.let { uri ->
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+
+                binding.imagePreview.setImageURI(uri)
+            }
         }
     }
 

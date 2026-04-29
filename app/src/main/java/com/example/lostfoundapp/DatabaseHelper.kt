@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class DatabaseHelper(context: Context) :
-    SQLiteOpenHelper(context, "lost_found.db", null, 1) {
+    SQLiteOpenHelper(context, "lost_found.db", null, 2) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
@@ -23,7 +23,7 @@ class DatabaseHelper(context: Context) :
                 imageUri TEXT,
                 timestamp TEXT
             )
-            """
+            """.trimIndent()
         )
     }
 
@@ -34,6 +34,7 @@ class DatabaseHelper(context: Context) :
 
     fun insertPost(post: Post): Boolean {
         val db = writableDatabase
+
         val values = ContentValues().apply {
             put("type", post.type)
             put("name", post.name)
@@ -47,40 +48,47 @@ class DatabaseHelper(context: Context) :
         }
 
         val result = db.insert("posts", null, values)
+        db.close()
+
         return result != -1L
     }
 
     fun getAllPosts(): ArrayList<Post> {
         val posts = ArrayList<Post>()
         val db = readableDatabase
+
         val cursor = db.rawQuery("SELECT * FROM posts ORDER BY id DESC", null)
 
         if (cursor.moveToFirst()) {
             do {
-                posts.add(
-                    Post(
-                        cursor.getInt(0),
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getString(4),
-                        cursor.getString(5),
-                        cursor.getString(6),
-                        cursor.getString(7),
-                        cursor.getString(8),
-                        cursor.getString(9)
-                    )
+                val post = Post(
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                    type = cursor.getString(cursor.getColumnIndexOrThrow("type")),
+                    name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    phone = cursor.getString(cursor.getColumnIndexOrThrow("phone")),
+                    description = cursor.getString(cursor.getColumnIndexOrThrow("description")),
+                    date = cursor.getString(cursor.getColumnIndexOrThrow("date")),
+                    location = cursor.getString(cursor.getColumnIndexOrThrow("location")),
+                    category = cursor.getString(cursor.getColumnIndexOrThrow("category")),
+                    imageUri = cursor.getString(cursor.getColumnIndexOrThrow("imageUri")),
+                    timestamp = cursor.getString(cursor.getColumnIndexOrThrow("timestamp"))
                 )
+
+                posts.add(post)
+
             } while (cursor.moveToNext())
         }
 
         cursor.close()
+        db.close()
+
         return posts
     }
 
     fun getPostsByCategory(category: String): ArrayList<Post> {
         val posts = ArrayList<Post>()
         val db = readableDatabase
+
         val cursor = db.rawQuery(
             "SELECT * FROM posts WHERE category = ? ORDER BY id DESC",
             arrayOf(category)
@@ -88,30 +96,35 @@ class DatabaseHelper(context: Context) :
 
         if (cursor.moveToFirst()) {
             do {
-                posts.add(
-                    Post(
-                        cursor.getInt(0),
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getString(4),
-                        cursor.getString(5),
-                        cursor.getString(6),
-                        cursor.getString(7),
-                        cursor.getString(8),
-                        cursor.getString(9)
-                    )
+                val post = Post(
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                    type = cursor.getString(cursor.getColumnIndexOrThrow("type")),
+                    name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    phone = cursor.getString(cursor.getColumnIndexOrThrow("phone")),
+                    description = cursor.getString(cursor.getColumnIndexOrThrow("description")),
+                    date = cursor.getString(cursor.getColumnIndexOrThrow("date")),
+                    location = cursor.getString(cursor.getColumnIndexOrThrow("location")),
+                    category = cursor.getString(cursor.getColumnIndexOrThrow("category")),
+                    imageUri = cursor.getString(cursor.getColumnIndexOrThrow("imageUri")),
+                    timestamp = cursor.getString(cursor.getColumnIndexOrThrow("timestamp"))
                 )
+
+                posts.add(post)
+
             } while (cursor.moveToNext())
         }
 
         cursor.close()
+        db.close()
+
         return posts
     }
 
     fun deletePost(id: Int): Boolean {
         val db = writableDatabase
-        val result = db.delete("posts", "id=?", arrayOf(id.toString()))
+        val result = db.delete("posts", "id = ?", arrayOf(id.toString()))
+        db.close()
+
         return result > 0
     }
 }
