@@ -10,5 +10,7 @@ data class Post(
     val location: String,
     val category: String,
     val imageUri: String,
-    val timestamp: String
+    val timestamp: String,
+    val latitude: Double,
+    val longitude: Double
 )

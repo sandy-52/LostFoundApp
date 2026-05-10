@@ -21,5 +21,9 @@ class MainActivity : AppCompatActivity() {
         binding.btnShow.setOnClickListener {
             startActivity(Intent(this, PostListActivity::class.java))
         }
+
+        binding.btnShowMap.setOnClickListener {
+            startActivity(Intent(this, MapsActivity::class.java))
+        }
     }
 }

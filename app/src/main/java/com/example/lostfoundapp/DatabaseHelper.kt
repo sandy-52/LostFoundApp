@@ -21,7 +21,9 @@ class DatabaseHelper(context: Context) :
                 location TEXT,
                 category TEXT,
                 imageUri TEXT,
-                timestamp TEXT
+                timestamp TEXT,
+                latitude REAL,
+                longitude REAL
             )
             """.trimIndent()
         )
@@ -45,6 +47,8 @@ class DatabaseHelper(context: Context) :
             put("category", post.category)
             put("imageUri", post.imageUri)
             put("timestamp", post.timestamp)
+            put("latitude", post.latitude)
+            put("longitude", post.longitude)
         }
 
         val result = db.insert("posts", null, values)
@@ -69,6 +73,10 @@ class DatabaseHelper(context: Context) :
                     description = cursor.getString(cursor.getColumnIndexOrThrow("description")),
                     date = cursor.getString(cursor.getColumnIndexOrThrow("date")),
                     location = cursor.getString(cursor.getColumnIndexOrThrow("location")),
+
+                    latitude = cursor.getDouble(cursor.getColumnIndexOrThrow("latitude")),
+                    longitude = cursor.getDouble(cursor.getColumnIndexOrThrow("longitude")),
+
                     category = cursor.getString(cursor.getColumnIndexOrThrow("category")),
                     imageUri = cursor.getString(cursor.getColumnIndexOrThrow("imageUri")),
                     timestamp = cursor.getString(cursor.getColumnIndexOrThrow("timestamp"))
@@ -104,6 +112,10 @@ class DatabaseHelper(context: Context) :
                     description = cursor.getString(cursor.getColumnIndexOrThrow("description")),
                     date = cursor.getString(cursor.getColumnIndexOrThrow("date")),
                     location = cursor.getString(cursor.getColumnIndexOrThrow("location")),
+
+                    latitude = cursor.getDouble(cursor.getColumnIndexOrThrow("latitude")),
+                    longitude = cursor.getDouble(cursor.getColumnIndexOrThrow("longitude")),
+
                     category = cursor.getString(cursor.getColumnIndexOrThrow("category")),
                     imageUri = cursor.getString(cursor.getColumnIndexOrThrow("imageUri")),
                     timestamp = cursor.getString(cursor.getColumnIndexOrThrow("timestamp"))
