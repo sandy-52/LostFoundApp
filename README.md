@@ -14,6 +14,13 @@ This Android app allows users to report lost or found items.
 - SQLite
 - ViewBinding
 
+Task 9.1 updates:
+- Google Maps integration
+- Places Autocomplete
+- Current location feature
+- Lost/found item markers on map
+- Radius-based search
+
 Author
 - Sandali Rasnayake
 - 224767526
